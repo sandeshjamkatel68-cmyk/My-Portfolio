@@ -1,0 +1,65 @@
+---
+title: "How I built ShrinkBox and what I learned from shipping my first product"
+date: "2024-07-12"
+excerpt: "From the first idea to a deployed product — the process, the challenges, the mistakes, and what I would do differently now."
+category: "Project"
+readTime: "5 min read"
+featured: true
+tags: ["next.js", "product", "shipping", "vercel"]
+---
+
+Building ShrinkBox was the first time I took an idea from a vague thought to something publicly live on the internet. It taught me more than any tutorial could.
+
+## The idea
+
+I was working on a project and needed to compress images quickly. Most tools I found were either cluttered with ads, required a signup, or felt unreliable. I thought — this should be simple. Upload a file, get a smaller one back. Why is this hard to find?
+
+That was the beginning of ShrinkBox.
+
+## Starting to build
+
+I started with the UI. Not the logic — the interface first. I wanted to make sure the core interaction felt right before writing a single line of compression code.
+
+The design principle was simple: **one action, as little friction as possible.** Drop a file. See the result. Download it.
+
+I used Next.js because I wanted server-side rendering for performance and easy Vercel deployment. Tailwind CSS kept the styling fast and consistent without fighting specificity issues.
+
+## The hard parts
+
+### Making it work for real users — not just me
+
+Getting something to work on my machine is step one. Making it work reliably for strangers on different devices, browsers, and network speeds is a completely different problem.
+
+I underestimated this. The first version had edge cases I only discovered after deploying — files that caused errors, formats I had not tested, mobile browsers that behaved differently.
+
+### Performance actually matters
+
+I thought "it is just a compression tool, performance is not that critical." I was wrong. A slow, unresponsive UI makes people feel like the tool is broken, even if the output is perfect.
+
+I spent two days just improving the perceived performance — better loading states, immediate feedback on file selection, smooth progress indicators.
+
+### Design is not decoration
+
+I almost shipped the first version with no visual polish. It worked, so I thought it was ready. But showing it to a few people made it clear: the UI communicated either trust or distrust within the first 3 seconds, before they even used the tool.
+
+Clean spacing, clear typography, and a simple color palette made a real difference in how people responded to it.
+
+## What I learned
+
+**1. Shipping is harder than building.** The feature is never done when it "works." It is done when it works for people who are not you.
+
+**2. Your first version will be wrong.** And that is fine. The goal of version one is to learn what the real version should be.
+
+**3. Write error handling before you think you need it.** I spent hours debugging silent failures that would have been obvious with better error messages.
+
+**4. Get feedback early.** I built for too long in isolation. Showing it to one person after week one would have saved me weeks of work on the wrong things.
+
+## Where it is now
+
+ShrinkBox is live at [shrink-box.com](https://shrink-box.com). It handles image compression cleanly and I am actively working on v2 — more formats, better performance, cleaner UI.
+
+It is the first real product I have shipped. I am proud of that. And I want to keep building things like it.
+
+---
+
+*If you have feedback on ShrinkBox, I would genuinely love to hear it. [Email me](mailto:sandeshjamkatel68@gmail.com).*

@@ -1,0 +1,99 @@
+---
+title: "5 things I wish I knew before starting with Next.js"
+date: "2024-08-18"
+excerpt: "App Router, server components, metadata, and dynamic routes — the mental model shifts that actually matter when you are starting out."
+category: "Development"
+readTime: "6 min read"
+featured: false
+tags: ["next.js", "react", "web-development", "learning"]
+---
+
+Next.js is the framework I use for everything now. But when I started, the documentation was clear and the concepts made sense — yet I still spent hours confused by things that turned out to be simple once someone explained the mental model correctly.
+
+Here are five things I wish someone had told me before I started.
+
+## 1. App Router and Pages Router are genuinely different paradigms
+
+When I started, I kept mixing up App Router and Pages Router patterns. They are not just different file locations — they are different mental models.
+
+**Pages Router** thinks in terms of: each file is a route, `getServerSideProps` fetches data, `_app.js` wraps everything.
+
+**App Router** thinks in terms of: layouts, server components by default, and fetching data directly in components using async/await.
+
+The mistake I made was trying to apply Pages Router thinking to App Router code. Once I accepted that App Router is a clean break and learned it on its own terms, everything clicked.
+
+**Practical tip:** If you are starting new, start with App Router. Do not try to learn both at once.
+
+## 2. Server components are the default — and that is the point
+
+In App Router, every component is a server component unless you add `"use client"` at the top.
+
+I kept adding `"use client"` to everything out of habit, which defeats most of the performance benefits. The rule I now follow:
+
+- If the component uses `useState`, `useEffect`, event handlers, or browser APIs → `"use client"`
+- If it just renders data, fetches from a database, or is purely visual → leave it as a server component
+
+Server components never ship their JavaScript to the browser. This matters for performance more than I initially appreciated.
+
+## 3. The `metadata` export is your friend for SEO
+
+Before I understood this, I was managing `<head>` tags manually and getting inconsistent results.
+
+In App Router, every `page.tsx` can export a `metadata` object:
+
+```ts
+export const metadata = {
+  title: "Page Title",
+  description: "Page description",
+  openGraph: {
+    title: "OG Title",
+    description: "OG description",
+  },
+};
+```
+
+Next.js handles merging it, adding it to `<head>`, and generating Open Graph tags automatically. For dynamic pages, export `generateMetadata` instead.
+
+This is one of those things that seems small but makes a big difference once you start caring about how your site appears in search results and link previews.
+
+## 4. Dynamic routes are simpler than they look
+
+`[slug]` folders scared me at first. They look like unusual syntax.
+
+The concept is straightforward: `app/blog/[slug]/page.tsx` creates a route that matches `/blog/anything` — and `anything` is available as `params.slug` inside the component.
+
+For static generation (which you want for blog posts), export `generateStaticParams`:
+
+```ts
+export function generateStaticParams() {
+  return posts.map((post) => ({ slug: post.slug }));
+}
+```
+
+Next.js will pre-render all those pages at build time. Fast, SEO-friendly, no runtime cost.
+
+## 5. `next/image` is worth using, but understand why
+
+I initially skipped `next/image` and used regular `<img>` tags. This was a mistake.
+
+`next/image` automatically:
+- Serves modern formats (WebP, AVIF) when the browser supports them
+- Lazy loads images below the fold
+- Prevents layout shift with `width` and `height` props
+- Resizes images to exactly what you need
+
+The friction of providing `width` and `height` is worth it for the performance gains. On a portfolio site, image performance is often the biggest single factor in Core Web Vitals scores.
+
+---
+
+## The overall mental model shift
+
+The biggest thing I needed to accept: **Next.js is opinionated, and fighting its opinions costs more than following them.**
+
+When something feels awkward — like managing client state, or where to put data fetching logic — it is usually a signal that there is a Next.js-idiomatic way to handle it that I have not discovered yet.
+
+The documentation is genuinely excellent. When I am stuck, reading the docs carefully (not just scanning them) almost always has the answer.
+
+---
+
+*What confused you most when starting with Next.js? I am curious — [send me a message](/contact).*
